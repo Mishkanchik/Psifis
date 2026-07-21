@@ -133,12 +133,20 @@ function HomePage() {
   const maxSlide = Math.max(0, therapists.length - slidesPerView)
 
   const nextSlide = () => {
-    setCurrentSlide(prev => Math.min(prev + 1, maxSlide))
+    setCurrentSlide(prev => prev === maxSlide ? 0 : prev + 1)
   }
 
   const prevSlide = () => {
-    setCurrentSlide(prev => Math.max(prev - 1, 0))
+    setCurrentSlide(prev => prev === 0 ? maxSlide : prev - 1)
   }
+
+  // Auto-advance timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide()
+    }, 3000) // 3 seconds per slide
+    return () => clearInterval(interval)
+  }, [maxSlide])
 
   const categories = [
     { id: 'personal', name: 'Особиста терапія', icon: Heart },
@@ -561,12 +569,7 @@ function HomePage() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={prevSlide}
-                disabled={currentSlide === 0}
-                className={`p-3 rounded-full ${
-                  currentSlide === 0 
-                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                    : 'bg-primary-100 text-primary-600 hover:bg-primary-200'
-                }`}
+                className="p-3 rounded-full bg-primary-100 text-primary-600 hover:bg-primary-200"
               >
                 <ChevronLeft className="w-6 h-6" />
               </motion.button>
@@ -574,12 +577,7 @@ function HomePage() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={nextSlide}
-                disabled={currentSlide === maxSlide}
-                className={`p-3 rounded-full ${
-                  currentSlide === maxSlide 
-                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
-                    : 'bg-primary-100 text-primary-600 hover:bg-primary-200'
-                }`}
+                className="p-3 rounded-full bg-primary-100 text-primary-600 hover:bg-primary-200"
               >
                 <ChevronRight className="w-6 h-6" />
               </motion.button>
